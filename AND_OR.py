@@ -7,7 +7,7 @@ def sigmoid(x):
     return 1 / (1 + math.exp(-x))
 
 
-def train(x, y):
+def run_train(x, y):
     global w, b
     LEARNING_RATE = 0.1
     w = tf.random.normal([2], 0, 1)
@@ -27,28 +27,28 @@ def train(x, y):
             print('epoch {}, loss: {}'.format(i + 1, np.mean(losses)))
 
 
-def test(x, y):
+def run_test(x, y):
     print('\ntest results')
     for i in range(4):
         print('X: {}, Y: {}, output: {}'.format(x[i], y[i], sigmoid(np.sum(x[i]*w) +b)))
 
 
-def andNet_train_and_test():
+def andNet_exec():
     x = np.array([[1, 1], [1, 0], [0, 1], [0, 0]])
     y = np.array([[1], [0], [0], [0]])
 
-    train(x, y)
-    test(x, y)
+    run_train(x, y)
+    run_test(x, y)
 
 
-def orNet_train_and_test():
+def orNet_exec():
     x = np.array([[1, 1], [1, 0], [0, 1], [0, 0]])
     y = np.array([[1], [1], [1], [0]])
 
-    train(x, y)
-    test(x, y)
+    run_train(x, y)
+    run_test(x, y)
 
 
 if __name__ == '__main__':
-    andNet_train_and_test()
-    orNet_train_and_test()
+    andNet_exec()
+    orNet_exec()
