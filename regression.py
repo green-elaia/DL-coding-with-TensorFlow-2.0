@@ -36,15 +36,16 @@ def least_square_method():
 
 
 def tf_regression():
-    global x, y, a, b
+    global x, y, a, b, c
     a = tf.Variable(random.random())
     b = tf.Variable(random.random())
+    c = tf.Variable(random.random())
     optimizer = tf.optimizers.Adam(lr=0.07)
 
     # estimate a slope a and y-intercept b
     for i in range(1000):
         # minimize method는 param이 없는 loss function을 넣어줘야함
-        optimizer.minimize(compute_loss, var_list=[a, b])
+        optimizer.minimize(compute_loss, var_list=[a, b, c])
 
         if i % 100 == 99:
             # tensor는 print하면 값만 프린트되지 않음. 텐서값만 출력하려면 numpy obj로 바꿔야함
@@ -52,7 +53,7 @@ def tf_regression():
 
     # true regression line
     line_x = np.arange(np.min(x), np.max(x), 0.01)
-    line_y = a*line_x + b
+    line_y = a * line_x**2 + b * line_x + c
     plt.plot(line_x, line_y, 'r-')
 
     # plot a origin data
@@ -62,11 +63,34 @@ def tf_regression():
     plt.show()
 
 def compute_loss():
-    global x, y, a, b
-    y_pred = a * x + b
+    global x, y, a, b, c
+    y_pred = a * x**2 + b * x + c
     loss = tf.reduce_mean((y - y_pred)**2)
     return loss
 
+
+
+def neuralnet():
+    global x, y
+    # train model
+    model = tf.keras.Sequential([
+        tf.keras.layers.Dense(units=6, activation='tanh', input_shape=(1,)),
+        tf.keras.layers.Dense(units=1)
+    ])
+    model.compile(optimizer=tf.keras.optimizers.SGD(lr=0.1), loss='mse')
+    model.summary()
+    model.fit(x, y, epochs=10)
+
+    # true regression line
+    line_x = np.arange(np.min(x), np.max(x), 0.01)
+    line_y = model.predict(line_x)
+    plt.plot(line_x, line_y, 'r-')
+
+    # plot a origin data
+    plt.plot(x, y, 'bo')
+    plt.xlabel('Population Growth Rate (%)')
+    plt.ylabel('Elderly Population Rate (%)')
+    plt.show()
 
 
 
