@@ -35,7 +35,7 @@ def preprocess_data():
     min-max normalization
     shuffle the data
     convert to numpy array
-    separate train and test dataset
+    separate the data into train and test dataset
     """
     global wine, train_x, train_y, test_x, test_y
     # print(wine.info())   # dataframe의 attiribute의 정보 요약
