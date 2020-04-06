@@ -67,13 +67,32 @@ def run_train():
 
     model.summary()
 
-    model.fit(train_x, train_y, epochs=25, batch_size=128, validation_split=0.25)
+    history = model.fit(train_x, train_y, epochs=25, batch_size=128, validation_split=0.25)
+
+    # visualization
+    plt.figure(figsize=(12, 4))
+
+    plt.subplot(1,2,1)
+    plt.plot(history.history['loss'], 'b-', label='loss')
+    plt.plot(history.history['val_loss'], 'r--', label='val_loss')
+    plt.xlabel('Epoch')
+    plt.legend()
+
+    plt.subplot(1,2,2)
+    plt.plot(history.history['accuracy'], 'g-', label='accuracy')
+    plt.plot(history.history['val_accuracy'], 'k--', label='val_accuracy')
+    plt.ylim(0.7, 1)
+    plt.xlabel('Epoch')
+    plt.legend()
+
+    plt.show()
 
 
 
 def run_test():
     global test_x, test_y, model
-    model.evaluate(test_x, test_y)
+    print('loss: {}, accuracy: {}'.format(*model.evaluate(test_x, test_y, verbose=0)))
+    # model.evaluate(test_x, test_y, verbose=0)
 
 
 if __name__ == "__main__":
