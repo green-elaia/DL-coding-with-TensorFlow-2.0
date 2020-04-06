@@ -1,5 +1,7 @@
 import tensorflow as tf
 import matplotlib.pyplot as plt
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import numpy as np
 
 
 def cnn_fashion_mnist_exec():
@@ -25,6 +27,7 @@ def load_data():
 def preprocess_data():
     """
     min-max normalization
+    image augmentation
     """
     global train_x, train_y, test_x, test_y
     train_x = train_x / 255.0
@@ -45,6 +48,32 @@ def preprocess_data():
     #     plt.imshow(train_x[c].reshape(28,28), cmap='gray')
     # plt.show()
     # print(train_y[:9])
+
+    # 이미지 보강
+    image_augmentation()
+
+
+
+def image_augmentation():
+    global train_x, train_y
+    image_generator = ImageDataGenerator(rotation_range=10,
+                                         zoom_range=0.10,
+                                         shear_range=0.5,
+                                         width_shift_range=0.10,
+                                         height_shift_range=0.10,
+                                         horizontal_filp=True,
+                                         vertical_flip=False)
+    augment_size = 30000
+
+    # random하게 augment_size 만큼의 sample data를 선택함
+    randidx = np.random.randint(train_x.shape[0], size=augment_size)
+    x_selected = train_x[randidx].copy()
+    y_selected = train_y[randidx].copy()
+
+    # image_generator.flow()는 iterator를 return하며, iterator의 element 갯수는 data_size / batch_size 만큼 임
+    x_augmented = image_generator.flow(x_selected, np.zeros(augment_size), batch_size=augment_size, shuffle=False).next()[0]
+    train_x = np.concatenate((train_x, x_augmented))
+    train_y = np.concatenate((train_y, y_selected))
 
 
 
@@ -100,7 +129,6 @@ def run_train():
 def run_test():
     global test_x, test_y, model
     print('loss: {}, accuracy: {}'.format(*model.evaluate(test_x, test_y, verbose=0)))
-    # model.evaluate(test_x, test_y, verbose=0)
 
 
 if __name__ == "__main__":
