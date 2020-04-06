@@ -49,16 +49,24 @@ def preprocess_data():
 
 
 def run_train():
+    """
+    VGGNet 스타일로 레이어를 충분히 쌓고 이미지 보강(Image Augmentation)을 통해 성능을 향상 시켜봄
+    """
     global train_x, train_y, model
     model = tf.keras.Sequential()
-    model.add(tf.keras.layers.Conv2D(input_shape=(28,28,1), kernel_size=(3,3), filters=32))
+    model.add(tf.keras.layers.Conv2D(input_shape=(28,28,1), kernel_size=(3,3), filters=32, padding='same', activation='relu'))
+    model.add(tf.keras.layers.Conv2D(kernel_size=(3,3), filters=64, padding='same', activation='relu'))
     model.add(tf.keras.layers.MaxPool2D(strides=(2,2)))
-    model.add(tf.keras.layers.Conv2D(kernel_size=(3,3), filters=64))
+    model.add(tf.keras.layers.Dropout(rate=0.5))
+    model.add(tf.keras.layers.Conv2D(kernel_size=(3,3), filters=128, padding='same', activation='relu'))
+    model.add(tf.keras.layers.Conv2D(kernel_size=(3,3), filters=256, padding='valid', activation='relu'))
     model.add(tf.keras.layers.MaxPool2D(strides=(2, 2)))
-    model.add(tf.keras.layers.Conv2D(kernel_size=(3, 3), filters=128))
+    model.add(tf.keras.layers.Dropout(rate=0.5))
     model.add(tf.keras.layers.Flatten())
-    model.add(tf.keras.layers.Dense(units=128, activation='relu'))
-    model.add(tf.keras.layers.Dropout(rate=0.3))
+    model.add(tf.keras.layers.Dense(units=512, activation='relu'))
+    model.add(tf.keras.layers.Dropout(rate=0.5))
+    model.add(tf.keras.layers.Dense(units=256, activation='relu'))
+    model.add(tf.keras.layers.Dropout(rate=0.5))
     model.add(tf.keras.layers.Dense(units=10, activation='softmax'))
 
     model.compile(optimizer=tf.keras.optimizers.Adam(),\
