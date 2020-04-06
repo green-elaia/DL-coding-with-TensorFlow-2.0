@@ -61,7 +61,7 @@ def image_augmentation():
                                          shear_range=0.5,
                                          width_shift_range=0.10,
                                          height_shift_range=0.10,
-                                         horizontal_filp=True,
+                                         horizontal_flip=True,
                                          vertical_flip=False)
     augment_size = 30000
 
@@ -104,7 +104,7 @@ def run_train():
 
     model.summary()
 
-    history = model.fit(train_x, train_y, epochs=25, batch_size=128, validation_split=0.25)
+    history = model.fit(train_x, train_y, epochs=30, batch_size=256, validation_split=0.25)
 
     # visualization
     plt.figure(figsize=(12, 4))
