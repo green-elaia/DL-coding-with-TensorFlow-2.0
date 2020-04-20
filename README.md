@@ -1,6 +1,6 @@
 # DL-coding-with-TensorFlow-2.0
 
-### -- 현재 진행중 --
+### -- 진행중 --
 
 Tensorflow 2.0 을 사용하여 딥러닝의 기본 네트워크들(DNN, CNN, RNN, 오토인코더)을 구현하고, 
 
